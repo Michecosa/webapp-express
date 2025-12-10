@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const moviesRouter = require("./routers/movies");
 const errorHandler = require("./middlewares/errorHandler");
+const notFound = require("./middlewares/notFound");
 
 const app = express();
 const port = 3000;
@@ -20,6 +21,7 @@ app.get("/errore", (req, res) => {
 });
 
 app.use(errorHandler);
+app.use(notFound);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

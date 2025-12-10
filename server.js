@@ -9,19 +9,17 @@ const port = 3000;
 
 app.use(express.json());
 app.use(express.static("public"));
+app.use("/movies", moviesRouter);
+app.use(errorHandler);
+app.use(notFound);
 
 app.get("/", (req, res) => {
   res.send("Ciao belli");
 });
 
-app.use("/movies", moviesRouter);
-
 app.get("/errore", (req, res) => {
   throw new Error();
 });
-
-app.use(errorHandler);
-app.use(notFound);
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

@@ -5,6 +5,12 @@ const index = (req, res) => {
 
   connection.query(sql, (err, results) => {
     if (err) return res.status(500).json({ error: "Database query failed" });
+
+    for (let i = 0; i < results.length; i++) {
+      results[i].image_url =
+        req.protocol + "://" + req.get("host") + "/" + results[i].image;
+    }
+
     res.json(results);
   });
 };
@@ -23,10 +29,14 @@ const show = (req, res) => {
       return res
         .status(500)
         .json({ error: "Database query failed", message: err.message });
+
     if (movieResults.length === 0)
       return res.status(404).json({ error: "Movie not found" });
 
     const movie = movieResults[0];
+
+    movie.image_url =
+      req.protocol + "://" + req.get("host") + "/" + movie.image;
 
     connection.query(reviewSQL, [id], (err, reviewResults) => {
       if (err)

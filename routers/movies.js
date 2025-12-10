@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const { index } = require("../controllers/moviesController");
+const { index, show } = require("../controllers/moviesController");
 
 router.get("/", index);
+router.get("/:id", show);
 
 module.exports = router;

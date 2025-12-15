@@ -50,7 +50,45 @@ const show = (req, res) => {
   });
 };
 
+const storeReview = (req, res) => {
+  const { id } = req.params;
+  const { name, vote, text } = req.body;
+
+  if (!name || !vote || !text) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  if (vote < 1 || vote > 5) {
+    return res.status(400).json({ error: "Vote must be between 1 and 5" });
+  }
+
+  const sql = `
+    INSERT INTO reviews (movie_id, name, vote, text)
+    VALUES (?, ?, ?, ?)
+  `;
+
+  connection.query(sql, [id, name, vote, text], (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ error: "Database query failed", message: err.message });
+    }
+
+    res
+      .status(201)
+      .json({
+        message: "Review created",
+        id: result.insertId,
+        movie_id: id,
+        name,
+        vote,
+        text,
+      });
+  });
+};
+
 module.exports = {
   index,
   show,
+  storeReview,
 };
